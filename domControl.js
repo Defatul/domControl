@@ -49,7 +49,6 @@ const domControl = {
         if ((statusType == 'object') && ('destroy' in status)) index.destroyAction = status.destroy;
 
         let deleteRecord = function(){
-            // Kayıdı Sil..
             if (timeoutStatus) clearTimeout(timeoutIndex);
             delete ths.record[ths.record.findIndex(x => x.key == key)];
             ths.record = ths.record.filter(() => true);
@@ -108,7 +107,7 @@ const domControl = {
                         }
                     }
                 }else if(successfulStatus == 'function'){
-                    successful.call(this, forKey, key, index, destroy);
+                    successful.call(this, key, index, destroy);
                 }
                 deleteRecord();
             } else {

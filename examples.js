@@ -15,7 +15,7 @@ domControl.add(
     (key, index, remove, destroy) => {
         return [...document.querySelectorAll('table.table-striped tbody tr:not(.message)')] > 0;
     }, 
-    (forKey, key, index, destroy) => {
+    (key, index, destroy) => {
         console.log('Complete...');
     },
     () => {
