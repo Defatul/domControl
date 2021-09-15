@@ -45,6 +45,7 @@ const domControl = {
 
         let index = ths.index(key);
 
+        if((statusType == 'object') && ('before' in status)) status.before.call(this, key, index);
         if (timeoutStatus && ('action' in status.timeout)) index.timeout = status.timeout.action;
         if ((statusType == 'object') && ('destroy' in status)) index.destroyAction = status.destroy;
 
