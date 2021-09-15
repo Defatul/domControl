@@ -1,6 +1,6 @@
 domControl.add(
     function(key, index, remove, destroy) {
-        return [...document.querySelectorAll('table.table-striped tbody tr:not(.message)')] > 0 ? 'Complete' : false;
+        return [...document.querySelectorAll('table.table-striped tbody tr:not(.message)')].length > 0 ? 'Complete' : false;
     }, {
         Complete: function() {
             console.log('Complete...');
@@ -13,7 +13,7 @@ domControl.add(
 
 domControl.add(
     (key, index, remove, destroy) => {
-        return [...document.querySelectorAll('table.table-striped tbody tr:not(.message)')] > 0;
+        return [...document.querySelectorAll('table.table-striped tbody tr:not(.message)')].length > 0;
     }, 
     (key, index, destroy) => {
         console.log('Complete...');
