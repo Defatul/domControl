@@ -37,6 +37,7 @@ const domControl = {
 
         let ths = this;
         let repeat;
+        let successfulStatus = (typeof successful == 'object' ? 'object' : (typeof successful == 'function' ? 'function' : false));
         let timeoutStatus = (statusType == 'object' ? (('timeout' in status) ? ((typeof status.timeout == 'object') ? (('time' in status.timeout) ? true : false) : false) : false) : false);
         let timeoutIndex;
 
@@ -61,7 +62,7 @@ const domControl = {
                     if (typeof action == 'function') {
                         action.call(this, key, index, destroy);
                     } else if (typeof action == 'string') {
-                        if (Object.keys(successful).length > 0) {
+                        if ((successfulStatus == 'object') && Object.keys(successful).length > 0) {
                             for (const [forKey, forValue] of Object.entries(successful)) {
                                 if (forKey == action) forValue.call(this, forKey, key, index, destroy);
                             }
@@ -100,10 +101,14 @@ const domControl = {
             let statusOut = reply();
             if (statusOut) {
                 clearTimeout(repeat);
-                if (Object.keys(successful).length > 0) {
-                    for (const [forKey, forValue] of Object.entries(successful)) {
-                        if (forKey == statusOut) forValue.call(this, forKey, key, index, destroy);
+                if(successfulStatus == 'object'){
+                    if (Object.keys(successful).length > 0) {
+                        for (const [forKey, forValue] of Object.entries(successful)) {
+                            if (forKey == statusOut) forValue.call(this, forKey, key, index, destroy);
+                        }
                     }
+                }else if(successfulStatus == 'function'){
+                    successful.call(this, forKey, key, index, destroy);
                 }
                 deleteRecord();
             } else {

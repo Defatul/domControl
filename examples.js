@@ -11,6 +11,18 @@ domControl.add(
     }
 );
 
+domControl.add(
+    (key, index, remove, destroy) => {
+        return [...document.querySelectorAll('table.table-striped tbody tr:not(.message)')] > 0;
+    }, 
+    (forKey, key, index, destroy) => {
+        console.log('Complete...');
+    },
+    () => {
+        console.log('Waiting..');
+    }
+);
+
 domControl.add({
         status: function(key, index, remove, destroy) {
             return document.querySelector('input#name') ? 'Complete' : false;
@@ -63,9 +75,6 @@ let SetGet = domControl.add(
         	}
         
             return false;
-        }, 
-        destroyAction: function(){
-        	console.log('XxXxXxxxx');
         }
     }, 
     {
