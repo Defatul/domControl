@@ -12,14 +12,18 @@ const domControl = {
             if (notFoundAction) notFoundAction.call(this, key);
         }
     },
-    destroy: function(action) {
+    destroy: function(action, label) {
         this.record.forEach(function(record) {
             if (!('destroy' in record)) {
-                record.destroy = (('destroyAction' in record) ? record.destroyAction : (action ? action : true));
+                let destroyAction = (('destroyAction' in record) ? record.destroyAction : (action ? action : true));
+                if( label && ('label' in record) && record.label == label ) 
+                    record.destroy = destroyAction;
+                if(!label) 
+                    record.destroy = destroyAction;
             }
         });
     },
-    add: function(status, successful, unsuccessful = false, key = false, time = 200) {
+    add: function(status, successful, unsuccessful, key, time = 200) {
 
         let statusType = (typeof status == 'object' ? 'object' : (typeof status == 'function' ? 'function' : false));
 
@@ -45,9 +49,12 @@ const domControl = {
 
         let index = ths.index(key);
 
-        if ((statusType == 'object') && ('before' in status)) status.before.call(this, key, index);
         if (timeoutStatus && ('action' in status.timeout)) index.timeout = status.timeout.action;
-        if ((statusType == 'object') && ('destroy' in status)) index.destroyAction = status.destroy;
+        if (statusType == 'object'){
+            if ('before' in status) status.before.call(this, key, index);
+            if ('label' in status) index.label = status.label;
+            if ('destroy' in status) index.destroyAction = status.destroy;
+        }
 
         let deleteRecord = function(){
             if (timeoutStatus) clearTimeout(timeoutIndex);
@@ -81,10 +88,14 @@ const domControl = {
             index.remove = action;
         }
 
-        let destroy = function(action) {
+        let destroy = function(action, label) {
             ths.record.forEach(function(record) {
                 if ((record.key != key) && !('destroy' in record)) {
-                    record.destroy = (('destroyAction' in record) ? record.destroyAction : (action ? action : true));
+                    let destroyAction = (('destroyAction' in record) ? record.destroyAction : (action ? action : true));
+                    if( label && ('label' in record) && record.label == label ) 
+                        record.destroy = destroyAction;
+                    if(!label) 
+                        record.destroy = destroyAction;
                 }
             });
         }
